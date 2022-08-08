@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "4.27",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "Task1_Labirint",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
