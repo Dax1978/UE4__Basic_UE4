@@ -1,0 +1,82 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
+#include "Components/ArrowComponent.h"
+#include "Projectile.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Components/AudioComponent.h"
+#include "GameFramework/ForceFeedbackEffect.h"
+#include "Camera/CameraShakeBase.h"
+
+#include "Cannon1.generated.h"
+
+UENUM()
+enum class ECannonType
+{
+	Projectile,
+	Trace
+};
+
+UCLASS()
+class TANKOGEDDON_API ACannon1 : public AActor
+{
+	GENERATED_BODY()
+	
+public:	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Components)
+	USceneComponent* DefaultRoot;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Components)
+	UStaticMeshComponent* Cannon1BodyMesh;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Components)
+	UArrowComponent* ProjectileSpawnPoint;
+
+	// Ёффекты
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Components)
+	UParticleSystemComponent* ParticlesEffect;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Components)
+	UAudioComponent* AudioEffect;
+	// специальные эффекты (обратна€ св€зь в джойстик и дрожание камеры при выстреле
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Components)
+	UForceFeedbackEffect* ForceFeedback;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Components)
+	TSubclassOf<UCameraShakeBase> CameraShake;
+
+
+	// Sets default values for this actor's properties
+	ACannon1();
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = Cannon)
+	ECannonType CannonType = ECannonType::Projectile;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = Cannon)
+	float ReloadTime = 1;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = Cannon)
+	TSubclassOf<AProjectile> ProjectileClass;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = Cannon)
+	float TraceDistance = 1000;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = Cannon)
+	float TraceDamage = 1;
+
+	void Shoot(int ShootType = 0);
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+private:
+	void OnReload();
+	FTimerHandle ReloadTimer;
+	bool IsReadyShoot = true;
+};
